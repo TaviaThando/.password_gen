@@ -3,11 +3,11 @@ import random
 import os
 
 def success(application, password):
-    print(f'😃 YAYY!! NEW PASSWORD ({password}) FOR "{application}" CREATED')
+    print(f'\n😃 YAYY!! NEW PASSWORD ({password}) FOR "{application}" CREATED\n')
 
 
 def fail():
-    print('OMG! SOMETHING WENT HORRIBLY WRONG 😱😱')
+    print('\nOMG! SOMETHING WENT HORRIBLY WRONG 😱😱\n')
 
 
 def generate_password(letters, numbers, characters):
@@ -79,11 +79,7 @@ def get_application():
 
 
 def backup(application):
-    os.system("cd")
-    os.system("cd /home/actavian/.password_manager/")
-    os.system("git add .")
-    os.system(f'git commit -m "Password created for {application}"')
-    os.system("git push")
+    os.system(f'cd /home/actavian/.password_manager/ && git add . && git commit -m "Password created for {application}" && git push')
 
 
 def validate(application, file):
