@@ -1,6 +1,8 @@
 #!/bin/env python3
 import random
 import os
+from sys import argv
+
 
 def success(application, password):
     print(f'\n😃 YAYY!! NEW PASSWORD ({password}) FOR "{application}" CREATED\n')
@@ -104,9 +106,11 @@ if __name__ == '__main__':
         chars = all_chars.split(' ')
         nums = all_nums.split(' ')
 
-
         password = generate_password(letters, nums, chars)
-        application = get_application()
+        if len(argv) > 1:
+            application = argv[1]
+        else:
+            application = get_application()
         file = get_file()
         valid = validate(application, file)
         if valid:
