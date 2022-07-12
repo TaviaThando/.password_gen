@@ -32,9 +32,7 @@ def generate_password(letters, numbers, characters):
 
 def get_file():
     with open('/home/actavian/.password_manager/passwords.txt', 'r') as file:
-        line = file.readline()
-        print(line)
-
+        return file.readlines()
 
 def folder_found():
     '''Looks for password manager folder in the
@@ -81,32 +79,41 @@ def get_application():
 
 
 def backup(application):
-    # os.system("git add .")
-    # os.system(f'git commit -m "Password created for {application}"')
-    # os.system("git push")
-    print("\n on pause")
+    os.system("cd .password_manager/")
+    os.system("git add .")
+    os.system(f'git commit -m "Password created for {application}"')
+    os.system("git push")
 
 
 def validate(application, file):
-#    if application in file:
-#         print(f"\n{application} already has a password")
-#         return
-    print("\nhi...")
-
+    for f in file:
+        if application in f:
+            print(f"\n{application} already has a password")
+            print(f"\nThe password is {f}")
+            return False
+    
+    return True
+    
 
 if __name__ == '__main__':
 
-    all_letters = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'
-    all_chars = '! @ # $ % ^ & * [ ] , " : ; - = + _ ~ ` ? < >'
-    all_nums = '1 2 3 4 5 6 7 8 9 0'
+    while True:
 
-    letters = all_letters.split(' ')
-    chars = all_chars.split(' ')
-    nums = all_nums.split(' ')
+        all_letters = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'
+        all_chars = '! @ # $ % ^ & * [ ] , " : ; - = + _ ~ ` ? < >'
+        all_nums = '1 2 3 4 5 6 7 8 9 0'
+
+        letters = all_letters.split(' ')
+        chars = all_chars.split(' ')
+        nums = all_nums.split(' ')
 
 
-    password = generate_password(letters, nums, chars)
-    application = get_application()
-    file = get_file()
-    validate(application, file)
-    set_password(password, application)
+        password = generate_password(letters, nums, chars)
+        application = get_application()
+        file = get_file()
+        valid = validate(application, file)
+        if valid:
+            set_password(password, application)
+        else:
+            break
+        break
