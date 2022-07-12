@@ -79,6 +79,7 @@ def get_application():
 
 
 def backup(application):
+    os.system("cd")
     os.system("cd /home/actavian/.password_manager/")
     os.system("git add .")
     os.system(f'git commit -m "Password created for {application}"')
