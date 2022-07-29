@@ -12,6 +12,13 @@ def fail():
     print('\nOMG! SOMETHING WENT HORRIBLY WRONG 😱😱\n')
 
 
+def find_user():
+    """Gets user of specific machine
+    """
+    user = os.path.expanduser('~')
+
+    return user
+
 def generate_password(letters, numbers, characters):
     '''Creates a secured password
     from randomly selected letters, numbers and chars
@@ -32,41 +39,41 @@ def generate_password(letters, numbers, characters):
     return password
 
 
-def get_file():
-    with open('/home/actavian/.password_manager/passwords.txt', 'r') as file:
+def get_file(user):
+    with open(f'{user}/.password_manager/passwords.txt', 'r') as file:
         return file.readlines()
 
-def folder_found():
+def folder_found(user):
     '''Looks for password manager folder in the
     home directory
     '''
-    if os.path.exists('/home/actavian/.password_manager'):
+    if os.path.exists(f'{user}/.password_manager'):
         return True
     else:
         return False
 
 
-def set_password(password, application):
+def set_password(password, application, user):
     '''Writes to a passwords text file (app:password)
     saved in password manager directory located in the home
     directory
     '''
-    if folder_found():
+    if folder_found(user):
         try:
-            with open('/home/actavian/.password_manager/passwords.txt', 'a') as file:
+            with open(f'{user}/.password_manager/passwords.txt', 'a') as file:
                 file.write(f'\n{application}: {password}\n')
             success(application, password)
-            backup(application)
+            backup(application, user)
         except:
             fail()
             
     else:
-        os.system('mkdir /home/actavian/.password_manager')
+        os.system(f'mkdir {user}/.password_manager')
         try:
-            with open('/home/actavian/.password_manager/passwords.txt', 'x') as file:
+            with open(f'{user}/.password_manager/passwords.txt', 'x') as file:
                 file.write(f'\n{application}: {password}\n')
             success(application, password)
-            backup(application)
+            backup(application, user)
         except:
             fail()
 
@@ -80,8 +87,8 @@ def get_application():
     return application
 
 
-def backup(application):
-    os.system(f'cd /home/actavian/.password_manager/ && git add . && git commit -m "Password created for {application}" && git push')
+def backup(application, user):
+    os.system(f'cd {user}/.password_manager/ && git add . && git commit -m "Password created for {application}" && git push')
 
 
 def validate(application, file):
@@ -107,14 +114,15 @@ if __name__ == '__main__':
         nums = all_nums.split(' ')
 
         password = generate_password(letters, nums, chars)
+        user = find_user()
         if len(argv) > 1:
             application = argv[1]
         else:
             application = get_application()
-        file = get_file()
+        file = get_file(user)
         valid = validate(application, file)
         if valid:
-            set_password(password, application)
+            set_password(password, application, user)
         else:
             break
         break
