@@ -54,6 +54,7 @@ def get_file(user):
         except:
             fail()
 
+
 def folder_found(user):
     '''Looks for password manager folder in the
     home directory
@@ -103,11 +104,14 @@ def backup(application, user):
 
 
 def validate(application, file):
-    for f in file:
-        if application in f:
-            print(f"\n{application} already has a password")
-            print(f"\nThe password is {f}")
-            return False
+    if file == []:
+        return False
+    else:
+        for f in file:
+            if application in f:
+                print(f"\n{application} already has a password")
+                print(f"\nThe password is {f}")
+                return False
     
     return True
     
