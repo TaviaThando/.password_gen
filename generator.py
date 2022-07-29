@@ -40,8 +40,19 @@ def generate_password(letters, numbers, characters):
 
 
 def get_file(user):
-    with open(f'{user}/.password_manager/passwords.txt', 'r') as file:
-        return file.readlines()
+    if folder_found(user):
+        try:
+            with open(f'{user}/.password_generator/yello_passwords.txt', 'r') as file:
+                return file.readlines()
+        except:
+            fail()
+    else:
+        os.system(f'mkdir {user}/.password_generator')
+        try:
+            with open(f'{user}/.password_generator/yello_passwords.txt', 'x') as file:
+                return file.readlines()
+        except:
+            fail()
 
 def folder_found(user):
     '''Looks for password manager folder in the
