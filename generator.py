@@ -42,14 +42,14 @@ def generate_password(letters, numbers, characters):
 def get_file(user):
     if folder_found(user):
         try:
-            with open(f'{user}/.password_generator/yello_passwords.txt', 'r') as file:
+            with open(f'{user}/.password_generator/', 'r') as file:
                 return file.readlines()
         except:
             fail()
     else:
         os.system(f'mkdir {user}/.password_generator')
         try:
-            with open(f'{user}/.password_generator/yello_passwords.txt', 'x') as file:
+            with open(f'{user}/.password_generator/passwords.txt', 'x') as file:
                 return file.readlines()
         except:
             fail()
@@ -100,7 +100,57 @@ def get_application():
 
 
 def backup(application, user):
-    os.system(f'cd {user}/.password_manager/ && git add . && git commit -m "Password created for {application}" && git push')
+    '''
+    Backs up passwords to git
+    '''
+    if os.getcwd() == f"{user}/.password_generator":
+        git_commands_in_directory(application)
+    else:
+        git_commands_anywhere(application)
+
+
+def git_commands_in_directory(application):
+    """
+    """
+    os.system(f'git add . && git commit -m "Password created for {application}" && git push > push.txt 2>&1')
+
+
+    with open("push.txt", "r") as file:
+        lines = file.readlines()
+
+    for line in lines:
+        if "! [rejected]" in line:
+            os.system("git pull")
+            git_commands_in_directory(application)
+            break
+        else:
+            print()
+            print("Password has been backed up😃")
+            break
+
+    os.system("rm push.txt")
+
+
+def git_commands_anywhere(application):
+    """"""
+
+    os.system(f'cd {user}/.password_generator && git add . && git commit -m "Password created for {application}" && git push > push.txt 2>&1')
+
+    with open(f"{user}/.password_generator/push.txt", "r") as file:
+        lines = file.readlines()
+
+    for line in lines:
+        if "! [rejected]" in line:
+            os.system("git pull")
+            git_commands_in_directory(application)
+            break
+        else:
+            print()
+            print("Password has been backed up😃")
+            break
+
+    os.system(f"rm {user}/.password_generator/push.txt")
+
 
 
 def validate(application, file):
